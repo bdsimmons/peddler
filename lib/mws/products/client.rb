@@ -253,6 +253,31 @@ module MWS
         run
       end
 
+      def get_my_fees_estimate(id_type, id_value, amount, opts = {})
+        opts.update(
+          'FeesEstimateRequestList' => {
+            'FeesEstimateRequest' => {
+              'MarketplaceId' => primary_marketplace_id,
+              'IdType' => id_type,
+              'IdValue' => id_value,
+              'IsAmazonFulfilled' => true,
+              'Identifier' => 'GetFees1',
+              'PriceToEstimateFees' => {
+                'ListingPrice' => {
+                  'CurrencyCode' => 'USD',
+                  'Amount' => amount
+                }
+              }
+            }
+          }
+        )
+      
+        operation_with_marketplace('GetMyFeesEstimate')
+          .add(opts)
+
+        run
+      end
+
       # Gets the service status of the API
       #
       # @see http://docs.developer.amazonservices.com/en_US/products/Products_GetServiceStatus.html
